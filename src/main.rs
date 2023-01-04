@@ -21,7 +21,7 @@ fn main() {
             // println!("Ошибка парсинга аргументов командной строки!")
         }
     }
-    println!("Длина пароля: {}, количество паролей: {}, Количество наборов символов: {}", pass_parrams[0], pass_parrams[1], pass_parrams[2]);
+    // println!("Длина пароля: {}, количество паролей: {}, Количество наборов символов: {}", pass_parrams[0], pass_parrams[1], pass_parrams[2]);
 
     // Цифры
     let str_num: Vec<char> = vector_gen('0', '9');
@@ -39,24 +39,14 @@ fn main() {
     for _j in 0..pass_parrams[1] {     // Цикл по количеству паролей
         
         let mut str_pass: Vec<char>  = vec![];
+        let mut ch_index = 1;
         
-        // Первый символ - буква
-        let mut ch_index = rand::thread_rng().gen_range(1..=2);
-        match ch_index {
-            1 => {
-                str_pass.push(char_gen(&str_lat_b));
-            },
-            2 => {
-                str_pass.push(char_gen(&str_lat_s));
-            },
-            _ => {
-                println!("Задан недопустимый набор символов!");
-                break;
-            },
-        }
-
-        for _ in 1..pass_parrams[0] {          // Цикл по длине пароля - 1 
-            ch_index = rand::thread_rng().gen_range(1..=pass_parrams[2]);
+        for k in 0..pass_parrams[0] {          // Цикл по длине пароля - 1 
+            if k != 0 {
+                ch_index = rand::thread_rng().gen_range(1..=pass_parrams[2]);
+            } else {
+                ch_index = rand::thread_rng().gen_range(1..=2);
+            }
             match ch_index {
                 1 => {
                     str_pass.push(char_gen(&str_lat_b))
@@ -75,7 +65,6 @@ fn main() {
                     break;
                 },
             }
-            
         }
 
         let password = &str_pass.iter().collect::<String>();
@@ -98,24 +87,3 @@ fn char_gen(char_vec: &Vec<char>) -> char {
     let rnd_ch_index = rand::thread_rng().gen_range(0..len_vec);
     char::from(char_vec[rnd_ch_index])
 }
-
-// fn char_set_sel(range: i32) -> char {
-//     let ch_index = rand::thread_rng().gen_range(1..=range);
-//     match ch_index {
-//         1 => {
-//             char_gen(&str_lat_b)
-//         },
-//         2 => {
-//             char_gen(&str_lat_s)
-//         },
-//         3 => {
-//             char_gen(&str_num)
-//         },
-//         4 => {
-//             char_gen(&str_spec)
-//         },
-//         _ => {
-//             // println!("Задан недопустимый набор символов!");
-//         },
-//     }
-// }
