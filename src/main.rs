@@ -9,52 +9,34 @@ use rand::Rng;
 use base64::encode;
 
 fn main() {
-    let mut password_length =  9; // Длина пароля
-    let mut password_count  = 10; // Количество паролей
-    let mut password_chars  =  4; // Используемые наборы символов
+    let mut pass_parrams = vec![ 9, 10, 4]; //Длина пароля, Количество паролей, Используемые наборы символов
 
+    // Счт=итываем аргументы командной строки
     let args: Vec<String> = env::args().collect();
 
-    match args.len() {
-        2 => {
-            let password_length_str = &args[1];
-            password_length = password_length_str.parse().unwrap();
-        },
-        3 => {
-            let password_length_str = &args[1];
-            password_length = password_length_str.parse().unwrap();
-            let password_count_str = &args[2];
-            password_count = password_count_str.parse().unwrap();
-        },
-        4 => {
-            let password_length_str = &args[1];
-            password_length = password_length_str.parse().unwrap();
-            let password_count_str = &args[2];
-            password_count = password_count_str.parse().unwrap();
-            let password_chars_str = &args[3];
-            password_chars = password_chars_str.parse().unwrap();
-        },
-        _ => {}
+    for i in 1..4 {
+        if let Some(el) = args.get(i) {
+            pass_parrams[i - 1] = el.trim().parse().unwrap();
+        } else {
+            // println!("Ошибка парсинга аргументов командной строки!")
+        }
     }
+    println!("Длина пароля: {}, количество паролей: {}, Количество наборов символов: {}", pass_parrams[0], pass_parrams[1], pass_parrams[2]);
 
     // Цифры
     let str_num: Vec<char> = vector_gen('0', '9');
-    let len_num = str_num.len();
 
     // Большие латинские буквы
     let str_lat_b:Vec<char> = vector_gen('A', 'Z');
-    let len_b = str_lat_b.len();
 
     // Маленькие латинские буквы
     let str_lat_s:Vec<char> = vector_gen('a', 'z');
-    let len_s = str_lat_s.len();
 
     // Спецсимволы
     let str_spec: Vec<char> = vec!['+', '-', '&', '*', '^', '%', '$', '#', '@', '!', '~', '`', '.', ',', '/'];
-    let len_spec = str_spec.len();
 
 
-    for _j in 0..password_count {     // Цикл по количеству паролей
+    for _j in 0..pass_parrams[1] {     // Цикл по количеству паролей
         
         let mut str_pass: Vec<char>  = vec![];
         
@@ -62,10 +44,10 @@ fn main() {
         let mut ch_index = rand::thread_rng().gen_range(1..=2);
         match ch_index {
             1 => {
-                str_pass.push(char_gen(len_b, &str_lat_b));
+                str_pass.push(char_gen(&str_lat_b));
             },
             2 => {
-                str_pass.push(char_gen(len_s, &str_lat_s));
+                str_pass.push(char_gen(&str_lat_s));
             },
             _ => {
                 println!("Задан недопустимый набор символов!");
@@ -73,22 +55,20 @@ fn main() {
             },
         }
 
-        for _ in 1..password_length {
-            ch_index = rand::thread_rng().gen_range(1..=4);
+        for _ in 1..pass_parrams[0] {          // Цикл по длине пароля - 1 
+            ch_index = rand::thread_rng().gen_range(1..=pass_parrams[2]);
             match ch_index {
                 1 => {
-                    str_pass.push(char_gen(len_b, &str_lat_b));
+                    str_pass.push(char_gen(&str_lat_b))
                 },
                 2 => {
-                    str_pass.push(char_gen(len_s, &str_lat_s));
+                    str_pass.push(char_gen(&str_lat_s))
                 },
                 3 => {
-                    let rnd_ch_index = rand::thread_rng().gen_range(0..len_num);
-                    str_pass.push(char::from(str_num[rnd_ch_index]))
+                    str_pass.push(char_gen(&str_num))
                 },
                 4 => {
-                    let rnd_ch_index = rand::thread_rng().gen_range(0..len_spec);
-                    str_pass.push(char::from(str_spec[rnd_ch_index]))
+                    str_pass.push(char_gen(&str_spec))
                 },
                 _ => {
                     println!("Задан недопустимый набор символов!");
@@ -113,7 +93,29 @@ fn vector_gen(char_start: char, char_end: char) -> Vec<char> {
     return vec_out;
 }
 
-fn char_gen(len_vec: usize, char_vec: &Vec<char>) -> char {
+fn char_gen(char_vec: &Vec<char>) -> char {
+    let len_vec = char_vec.len();
     let rnd_ch_index = rand::thread_rng().gen_range(0..len_vec);
     char::from(char_vec[rnd_ch_index])
 }
+
+// fn char_set_sel(range: i32) -> char {
+//     let ch_index = rand::thread_rng().gen_range(1..=range);
+//     match ch_index {
+//         1 => {
+//             char_gen(&str_lat_b)
+//         },
+//         2 => {
+//             char_gen(&str_lat_s)
+//         },
+//         3 => {
+//             char_gen(&str_num)
+//         },
+//         4 => {
+//             char_gen(&str_spec)
+//         },
+//         _ => {
+//             // println!("Задан недопустимый набор символов!");
+//         },
+//     }
+// }
