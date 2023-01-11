@@ -11,6 +11,7 @@ use base64::encode;
 use std::process;
 
 fn main() {
+    let help_string="Программа - генератор паролей:\n  passgen [Длина пароля|-] [Количество паролей|-] [Используемые наборы символов (1-4)|-]";
     let mut pass_parrams = vec![ 9, 10, 4]; //Длина пароля, Количество паролей, Используемые наборы символов
     let mut help_check=false;
     // Счт=итываем аргументы командной строки
@@ -34,10 +35,9 @@ fn main() {
     }
 
     if help_check==true {
-        println!("Программа - генератор паролей\n  passgen [Длина пароля|-] [Количество паролей|-] [Используемые наборы символов (1-4)|-]");
+        println!("{}", help_string);
         process::exit(0);
     }
-    // println!("Длина пароля: {}, количество паролей: {}, Количество наборов символов: {}", pass_parrams[0], pass_parrams[1], pass_parrams[2]);
 
     // Цифры
     let str_num: Vec<char> = vector_gen('0', '9');
