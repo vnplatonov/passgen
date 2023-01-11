@@ -11,23 +11,45 @@ use base64::encode;
 use std::process;
 
 fn main() {
-    let help_string="Программа - генератор паролей:\n  passgen [Длина пароля|-] [Количество паролей|-] [Используемые наборы символов (1-4)|-]";
-    let mut pass_parrams = vec![ 9, 10, 4]; //Длина пароля, Количество паролей, Используемые наборы символов
+    let help_string="Программа - генератор паролей:\n  passgen [Длина пароля (8..256)|-] [Количество паролей (1..10000)|-] [Используемые наборы символов (1-4)|-]";
+    
+    //Длина пароля, Количество паролей, Используемые наборы символов
+    let mut pass_parrams: Vec<u32> = vec![ 9, 10, 4];
+
+    // Признак вывода помощи
     let mut help_check=false;
+
     // Счт=итываем аргументы командной строки
     let args: Vec<String> = env::args().collect();
 
     for i in 1..4 {
         if let Some(el) = args.get(i) {
-            match el.trim().parse::<i32>() {
-            Ok(el) => pass_parrams[i - 1] = el,
-            Err(_) => {
-                if el=="-h" || el=="--help" {
-                    help_check=true
-                } else {
-                    continue
+            match el.trim().parse::<u32>() {
+                Ok(el) => {
+                    if i-1 == 0 {
+                        match el {
+                            ..=7 => continue,
+                            8..=256 => pass_parrams[i - 1] = el,
+                            _ => pass_parrams[i - 1] = el % 256,
+                        }
+                    } else if i-1 == 1 {
+                        match el {
+                            0..=10000 => pass_parrams[i - 1] = el,
+                            _ => continue,
+                        }
+                    } else if i-1 == 2 {
+                        if el > 1 && el <= pass_parrams[2] {
+                            pass_parrams[i - 1] = el
+                        }
+                    }
                 }
-            }
+                Err(_) => {
+                    if el=="-h" || el=="--help" {
+                        help_check=true
+                    } else {
+                        continue
+                    }
+                }
         }
         } else {
             // println!("Ошибка парсинга аргументов командной строки!")
@@ -55,7 +77,7 @@ fn main() {
     for _j in 0..pass_parrams[1] {     // Цикл по количеству паролей
         
         let mut str_pass: Vec<char>  = vec![];
-        let mut ch_index: i32;
+        let mut ch_index: u32;
         
         for k in 0..pass_parrams[0] {          // Цикл по длине пароля - 1 
             if k != 0 {
@@ -91,6 +113,7 @@ fn main() {
 
 }
 
+// Генератор набора символов
 fn vector_gen(char_start: char, char_end: char) -> Vec<char> {
     let mut vec_out: Vec<char> = vec![];
     for ch in char_start..=char_end { 
@@ -99,6 +122,7 @@ fn vector_gen(char_start: char, char_end: char) -> Vec<char> {
     return vec_out;
 }
 
+// Генератор случайного символа
 fn char_gen(char_vec: &Vec<char>) -> char {
     let len_vec = char_vec.len();
     let rnd_ch_index = rand::thread_rng().gen_range(0..len_vec);
