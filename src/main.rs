@@ -3,23 +3,39 @@
 // Vladimir N Platonov //
 //    Moscow, 2022     //
 /////////////////////////
+// echo "$(passgen 15 1)" |awk '{print $2}'
 
 use std::env;
 use rand::Rng;
 use base64::encode;
+use std::process;
 
 fn main() {
     let mut pass_parrams = vec![ 9, 10, 4]; //Длина пароля, Количество паролей, Используемые наборы символов
-
+    let mut help_check=false;
     // Счт=итываем аргументы командной строки
     let args: Vec<String> = env::args().collect();
 
     for i in 1..4 {
         if let Some(el) = args.get(i) {
-            pass_parrams[i - 1] = el.trim().parse().unwrap();
+            match el.trim().parse::<i32>() {
+            Ok(el) => pass_parrams[i - 1] = el,
+            Err(_) => {
+                if el=="-h" || el=="--help" {
+                    help_check=true
+                } else {
+                    continue
+                }
+            }
+        }
         } else {
             // println!("Ошибка парсинга аргументов командной строки!")
         }
+    }
+
+    if help_check==true {
+        println!("Программа - генератор паролей\n  passgen [Длина пароля|-] [Количество паролей|-] [Используемые наборы символов (1-4)|-]");
+        process::exit(0);
     }
     // println!("Длина пароля: {}, количество паролей: {}, Количество наборов символов: {}", pass_parrams[0], pass_parrams[1], pass_parrams[2]);
 
@@ -39,7 +55,7 @@ fn main() {
     for _j in 0..pass_parrams[1] {     // Цикл по количеству паролей
         
         let mut str_pass: Vec<char>  = vec![];
-        let mut ch_index = 1;
+        let mut ch_index: i32;
         
         for k in 0..pass_parrams[0] {          // Цикл по длине пароля - 1 
             if k != 0 {
@@ -65,6 +81,7 @@ fn main() {
                     break;
                 },
             }
+
         }
 
         let password = &str_pass.iter().collect::<String>();
