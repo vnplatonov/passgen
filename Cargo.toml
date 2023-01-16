@@ -1,11 +1,11 @@
 [package]
 name = "passgen"
-version = "0.2.2"
+version = "0.2.4"
 edition = "2021"
 author = "Vladimir N Platonov"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand = "0.8.3"
-base64 = "~0.5.0"
+rand = "0.8.5"
+base64 = "0.21.0"
