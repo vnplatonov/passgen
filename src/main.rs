@@ -15,8 +15,10 @@ fn main() {
     
     //Длина пароля, Количество паролей, Используемые наборы символов
     let mut pass_parrams: Vec<u32> = vec![ 9, 10, 4];
+
+    //Используемые наборы символов
     let max_charset_count = 6;
-    
+
     // Признак вывода помощи
     let mut help_check=false;
 
