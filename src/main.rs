@@ -11,11 +11,12 @@ use base64::encode;
 use std::process;
 
 fn main() {
-    let help_string="Программа - генератор паролей:\n  passgen [Длина пароля (8..256)|-] [Количество паролей (1..10000)|-] [Используемые наборы символов (1-4)|-]";
+    let help_string="Программа - генератор паролей:\n  passgen [Длина пароля (8..256)|-] [Количество паролей (1..10000)|-] [Используемые наборы символов (1-6)|-]";
     
     //Длина пароля, Количество паролей, Используемые наборы символов
     let mut pass_parrams: Vec<u32> = vec![ 9, 10, 4];
-
+    let max_charset_count = 6;
+    
     // Признак вывода помощи
     let mut help_check=false;
 
@@ -38,7 +39,7 @@ fn main() {
                             _ => continue,
                         }
                     } else if i-1 == 2 {
-                        if el > 1 && el <= pass_parrams[2] {
+                        if el > 1 && el <= max_charset_count {
                             pass_parrams[i - 1] = el
                         }
                     }
@@ -73,6 +74,12 @@ fn main() {
     // Спецсимволы
     let str_spec: Vec<char> = vec!['+', '-', '&', '*', '^', '%', '$', '#', '@', '!', '~', '`', '.', ',', '/', '_', '='];
 
+    // Большие русские буквы
+    let str_rus_b:Vec<char> = vector_gen('А', 'Я');
+
+    // Маленькие русские буквы
+    let str_rus_s:Vec<char> = vector_gen('а', 'я');
+
 
     for _j in 0..pass_parrams[1] {     // Цикл по количеству паролей
         
@@ -97,6 +104,12 @@ fn main() {
                 },
                 4 => {
                     str_pass.push(char_gen(&str_spec))
+                },
+                5 => {
+                    str_pass.push(char_gen(&str_rus_b))
+                },
+                6 => {
+                    str_pass.push(char_gen(&str_rus_s))
                 },
                 _ => {
                     println!("Задан недопустимый набор символов!");
