@@ -3,7 +3,6 @@
 // Vladimir N Platonov //
 //    Moscow, 2022     //
 /////////////////////////
-// echo "$(passgen 15 1)" |awk '{print $2}'
 
 use std::env;
 use rand::Rng;
@@ -22,7 +21,7 @@ fn main() {
     // Признак вывода помощи
     let mut help_check=false;
 
-    // Счт=итываем аргументы командной строки
+    // Счтитываем аргументы командной строки
     let args: Vec<String> = env::args().collect();
 
     for i in 1..4 {
